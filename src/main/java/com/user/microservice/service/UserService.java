@@ -1,6 +1,7 @@
 package com.user.microservice.service;
 
 import com.user.microservice.dto.UserDto;
+import com.user.microservice.dto.UserRatingHotelDto;
 
 import java.util.List;
 
@@ -11,5 +12,7 @@ public interface UserService {
     UserDto getUserById(int userId);
 
     List<UserDto> getAllUser();
+
+    UserRatingHotelDto getUserRatingHotel(int userId);
 
 }

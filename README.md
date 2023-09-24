@@ -18,6 +18,12 @@ and rating microservice, also establish a synchronous communication between thes
        List<Rating> ratings = new ArrayList<Rating> 
 
 
+# Synchronous Microservice Communication using RestTemplate.
+1. Call User Service using userId, Get all user details, from there call the 
+   Rating Service to get the ratings, from List of Ratings get the Single Rating and 
+   Call the Hotel Service to get the Hotel Info from rating.getHotelId();
+
+
 
 # Add Eureka Server Client User-Service to eureka server.
 # Add 2 dependencies in user-service.
