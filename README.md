@@ -31,6 +31,11 @@ and rating microservice, also establish a synchronous communication between thes
    update and delete Hotel, by using restTemplate.
 
 
+# Remove Port and host and use loadbalancer.
+1. remove host and port and add service name instead.
+2. add @loadbalancer annotation in the restTemplate bean creation.
+
+
 
 # Add Eureka Server Client User-Service to eureka server.
 # Add 2 dependencies in user-service.
