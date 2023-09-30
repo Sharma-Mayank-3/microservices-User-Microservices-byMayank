@@ -20,21 +20,21 @@ public class UserHotelController {
     @PostMapping("/hotel")
     public ResponseEntity<ApiResponse> createHotel(@RequestBody HotelDto hotelDto){
         HotelDto hotel = this.hotelService.createHotel(hotelDto);
-        ApiResponse userCreated = ApiResponse.builder().serviceName("hotel-service").message("hotel created").data(hotel).status(true).build();
+        ApiResponse userCreated = ApiResponse.builder().serviceName("user-service").message("hotel created").data(hotel).status(true).build();
         return new ResponseEntity<>(userCreated, HttpStatus.CREATED);
     }
 
     @GetMapping("/hotel/{hotelId}")
     public ResponseEntity<ApiResponse> getHotelById(@PathVariable("hotelId") int hotelId){
         HotelDto hotel = this.hotelService.findHotelById(hotelId);
-        ApiResponse userCreated = ApiResponse.builder().serviceName("hotel-service").message("get hotel by Id").data(hotel).status(true).build();
+        ApiResponse userCreated = ApiResponse.builder().serviceName("user-service").message("get hotel by Id").data(hotel).status(true).build();
         return new ResponseEntity<>(userCreated, HttpStatus.OK);
     }
 
     @GetMapping("/hotel")
     public ResponseEntity<ApiResponse> getAllHotes(){
         List<HotelDto> allHotels = this.hotelService.getAllHotels();
-        ApiResponse userCreated = ApiResponse.builder().serviceName("hotel-service").message("all hotels list").data(allHotels).status(true).build();
+        ApiResponse userCreated = ApiResponse.builder().serviceName("user-service").message("all hotels list").data(allHotels).status(true).build();
         return new ResponseEntity<>(userCreated, HttpStatus.OK);
     }
 
@@ -44,14 +44,14 @@ public class UserHotelController {
             @PathVariable("hotelId") int hotelId
     ){
         HotelDto hotelDto1 = this.hotelService.updateHotel(hotelDto, hotelId);
-        ApiResponse userCreated = ApiResponse.builder().serviceName("hotel-service").message("hotel updated").data(hotelDto1).status(true).build();
+        ApiResponse userCreated = ApiResponse.builder().serviceName("user-service").message("hotel updated").data(hotelDto1).status(true).build();
         return new ResponseEntity<>(userCreated, HttpStatus.OK);
     }
 
     @DeleteMapping("/hotel/{hotelId}")
     public ResponseEntity<ApiResponse> deleteHotel(@PathVariable("hotelId") int hotelId){
         String s = this.hotelService.deleteHotel(hotelId);
-        ApiResponse userDeleted = ApiResponse.builder().serviceName("hotel-service").message("hotel deleted").data(s).status(true).build();
+        ApiResponse userDeleted = ApiResponse.builder().serviceName("user-service").message("hotel deleted").data(s).status(true).build();
         return new ResponseEntity<>(userDeleted, HttpStatus.OK);
     }
 
