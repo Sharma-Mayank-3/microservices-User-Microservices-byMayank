@@ -37,6 +37,33 @@ and rating microservice, also establish a synchronous communication between thes
 
 
 
+# Feign Client Call.....
+
+      ---------------------------------------------------------------------
+# Synchronous Microservice Communication using Feign Client.
+1. Create a Rating Controller and external.service package and create RatingFeignClient interface.
+2. Add @EnableFeignClient annotation in main class.
+3. Add dependencies openfeign
+
+        <dependency>
+         <groupId>org.springframework.cloud</groupId>
+         <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+
+        <dependencyManagement>
+          <dependencies>
+            <dependency>
+              <groupId>org.springframework.cloud</groupId>
+              <artifactId>spring-cloud-dependencies</artifactId>
+              <version>${spring-cloud.version}</version>
+              <type>pom</type>
+              <scope>import</scope>
+            </dependency>
+          </dependencies>
+        </dependencyManagement>
+
+
+
 # Add Eureka Server Client User-Service to eureka server.
 # Add 2 dependencies in user-service.
 # Add Eureka Server Client like add User service to eureka server.
