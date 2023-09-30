@@ -18,10 +18,17 @@ and rating microservice, also establish a synchronous communication between thes
        List<Rating> ratings = new ArrayList<Rating> 
 
 
+# Rest Template Call.....
+  
+      ---------------------------------------------------------------------
 # Synchronous Microservice Communication using RestTemplate.
 1. Call User Service using userId, Get all user details, from there call the 
    Rating Service to get the ratings, from List of Ratings get the Single Rating and 
    Call the Hotel Service to get the Hotel Info from rating.getHotelId();
+
+   
+2. Create a HotelController and HotelService to create, getById, getAll, 
+   update and delete Hotel, by using restTemplate.
 
 
 
