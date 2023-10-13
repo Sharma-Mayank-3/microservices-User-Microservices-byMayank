@@ -116,3 +116,62 @@ Add
 
     @EnableDiscoveryClient
 
+
+# Fault Tolerance.
+
+# Using Resilience 4j we can also do it using hystrix circuit breaker 
+# Using Resilience 4J demo
+
+Note 3 dependencies 
+1. Actuator dependency
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-actuator</artifactId>
+    <version>3.1.4</version>
+</dependency>
+
+```
+
+2. AOP dependency
+```xml
+<dependency>
+   <groupId>org.springframework.boot</groupId>
+   <artifactId>spring-boot-starter-aop</artifactId>
+   <version>3.1.4</version>
+</dependency>
+
+```
+
+3. Resiliance spring boot dependency
+```xml
+<dependency>
+   <groupId>io.github.resilience4j</groupId>
+   <artifactId>resilience4j-spring-boot3</artifactId>
+   <version>2.1.0</version>
+</dependency>
+
+```
+
+Note : Add Configuration in application.properties file 
+1. Actuator Configuration
+```properties
+management.health.circuitbreakers.enabled=true
+management.endpoints.web.exposure.include=health
+management.endpoints.health.show-details=always
+```
+
+2. Resilience 4J Configuration
+```properties
+resilience4j.circuitbreaker.instances.hotelServiceBreaker.registerHealthIndicator=true
+resilience4j.circuitbreaker.instances.hotelServiceBreaker.eventConsumerBufferSize=10
+resilience4j.circuitbreaker.instances.hotelServiceBreaker.failureRateThreshold=50
+resilience4j.circuitbreaker.instances.hotelServiceBreaker.minimumNumberOfCalls=5
+resilience4j.circuitbreaker.instances.hotelServiceBreaker.automaticTransitionFromOpenToHalfOpenEnabled=true
+resilience4j.circuitbreaker.instances.hotelServiceBreaker.waitDurationInOpenState=5000
+resilience4j.circuitbreaker.instances.hotelServiceBreaker.permittedNumberOfCallsInHalfOpenState=3
+resilience4j.circuitbreaker.instances.hotelServiceBreaker.slidingWindowSize=10
+resilience4j.circuitbreaker.instances.hotelServiceBreaker.slidingWindowType=COUNT_BASED
+```
+
+

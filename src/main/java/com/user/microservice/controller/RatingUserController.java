@@ -3,6 +3,8 @@ package com.user.microservice.controller;
 import com.user.microservice.dto.RatingDto;
 import com.user.microservice.payload.ApiResponse;
 import com.user.microservice.service.RatingService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@Slf4j
 @RequestMapping("/microservices/user")
 public class RatingUserController {
 
@@ -25,19 +28,35 @@ public class RatingUserController {
     }
 
     @GetMapping("/rating")
+    @CircuitBreaker(name = "ratingServiceBreaker", fallbackMethod = "getAllRatingFail")
     public ResponseEntity<ApiResponse> getAllRating(){
         List<RatingDto> allRatings = this.ratingService.getAllRatings();
         ApiResponse ratingCreated = ApiResponse.builder().status(true).serviceName("user-service").message("all rating").data(allRatings).build();
         return new ResponseEntity<>(ratingCreated, HttpStatus.OK);
     }
 
+    private ResponseEntity<ApiResponse> getAllRatingFail(Exception ex){
+        log.info("getAllRatingFail breaker called.....");
+        ApiResponse getAllRatingFail = ApiResponse.builder().status(false).serviceName("user-service").message("getAllRatingFail").data(null).build();
+        return new ResponseEntity<>(getAllRatingFail, HttpStatus.OK);
+    }
+
     @GetMapping("/rating/user")
+    @CircuitBreaker(name = "ratingServiceBreaker", fallbackMethod = "getRatingByUserFail")
     public ResponseEntity<ApiResponse> getRatingByUser(
             @RequestParam(value = "userId", required = true, defaultValue = "1") int userId
     ){
         List<RatingDto> allRatings = this.ratingService.getRatingByUser(userId);
         ApiResponse ratingCreated = ApiResponse.builder().status(true).serviceName("user-service").message("all rating by user").data(allRatings).build();
         return new ResponseEntity<>(ratingCreated, HttpStatus.OK);
+    }
+
+    private ResponseEntity<ApiResponse> getRatingByUserFail(
+            int userId, Exception ex
+    ){
+        log.info("getRatingByUserFail breaker called.....");
+        ApiResponse getRatingByUserFail = ApiResponse.builder().status(true).serviceName("user-service").message("agetRatingByUserFail").data(null).build();
+        return new ResponseEntity<>(getRatingByUserFail, HttpStatus.OK);
     }
 
     @GetMapping("/rating/hotel")
