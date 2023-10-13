@@ -174,4 +174,9 @@ resilience4j.circuitbreaker.instances.hotelServiceBreaker.slidingWindowSize=10
 resilience4j.circuitbreaker.instances.hotelServiceBreaker.slidingWindowType=COUNT_BASED
 ```
 
+# Actuator 
+```xpath
+http://localhost:8080/actuator/health
+```
+
 
