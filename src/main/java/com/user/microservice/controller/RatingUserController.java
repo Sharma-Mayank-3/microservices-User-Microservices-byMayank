@@ -4,6 +4,8 @@ import com.user.microservice.dto.RatingDto;
 import com.user.microservice.payload.ApiResponse;
 import com.user.microservice.service.RatingService;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,7 +30,8 @@ public class RatingUserController {
     }
 
     @GetMapping("/rating")
-    @CircuitBreaker(name = "ratingServiceBreaker", fallbackMethod = "getAllRatingFail")
+//    @CircuitBreaker(name = "ratingServiceBreaker", fallbackMethod = "getAllRatingFail")
+    @RateLimiter(name = "userRatingLimiter", fallbackMethod = "getAllRatingFail")
     public ResponseEntity<ApiResponse> getAllRating(){
         List<RatingDto> allRatings = this.ratingService.getAllRatings();
         ApiResponse ratingCreated = ApiResponse.builder().status(true).serviceName("user-service").message("all rating").data(allRatings).build();
@@ -59,13 +62,24 @@ public class RatingUserController {
         return new ResponseEntity<>(getRatingByUserFail, HttpStatus.OK);
     }
 
+    int retry = 1;
     @GetMapping("/rating/hotel")
+    @Retry(name = "userRatingRetry", fallbackMethod = "getAllRatingbyHotelFail")
     public ResponseEntity<ApiResponse> getAllRatingbyHotel(
             @RequestParam(value = "hotelId", required = true ,defaultValue = "1") int hotelId
     ){
+        log.info("retry : {}", retry);
+        retry++;
         List<RatingDto> allRatings = this.ratingService.getRatingByHotel(hotelId);
         ApiResponse ratingCreated = ApiResponse.builder().status(true).serviceName("user-service").message("all rating by hotel").data(allRatings).build();
         return new ResponseEntity<>(ratingCreated, HttpStatus.OK);
+    }
+
+    private ResponseEntity<ApiResponse> getAllRatingbyHotelFail(
+            int hotelId, Exception ex
+    ){
+        ApiResponse getAllRatingbyHotelFail = ApiResponse.builder().status(false).serviceName("user-service").message("getAllRatingbyHotelFail").data(null).build();
+        return new ResponseEntity<>(getAllRatingbyHotelFail, HttpStatus.OK);
     }
 
     @GetMapping("/rating/{ratingId}")
