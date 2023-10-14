@@ -175,8 +175,39 @@ resilience4j.circuitbreaker.instances.hotelServiceBreaker.slidingWindowType=COUN
 ```
 
 # Actuator 
-```xpath
+```
 http://localhost:8080/actuator/health
+```
+
+# Retry using Resilience 4J.
+1. Application.properties configuration for retry
+```properties
+resilience4j.retry.instances.userRatingRetry.maxRetryAttempts=3
+resilience4j.retry.instances.myRetry.waitDuration=1000
+```
+
+2. RatingUserController
+```
+@Retry(name = "userRatingRetry", fallbackMethod = "getAllRatingbyHotelFail")
+Actual method where rating service has been called.
+
+private ResponseEntity<ApiResponse> getRatingByUserFail(
+        int userId, Exception ex
+        ){
+        log.info("getRatingByUserFail breaker called.....");
+        ApiResponse getRatingByUserFail = ApiResponse.builder().status(true).serviceName("user-service").message("agetRatingByUserFail").data(null).build();
+        return new ResponseEntity<>(getRatingByUserFail, HttpStatus.OK);
+        }
+
+```
+
+# RateLimiter, means in some time frame how many request we want to process to our server.
+1. application.properties configuration
+```properties
+resilience4j.ratelimiter.instances.myRateLimiter.limitForPeriod=50
+resilience4j.ratelimiter.instances.myRateLimiter.limitRefreshPeriod=10
+resilience4j.ratelimiter.instances.myRateLimiter.timeoutDuration=1000
+
 ```
 
 
